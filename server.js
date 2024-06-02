@@ -9,7 +9,7 @@ const port = process.env.PORT || 3000;
 const openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 app.use(express.json())
 
-app.use(cors({origin: 'http://localhost:5173', credentials: true}))
+app.use(cors({origin: ['http://localhost:5173', 'https://tone-translator-frontend-g5pa.vercel.app'], credentials: true}))
 app.post('/translate-tone', async (req, res) => {
     const { sample_content, new_draft } = req.body;
     if (!sample_content || !new_draft) {
