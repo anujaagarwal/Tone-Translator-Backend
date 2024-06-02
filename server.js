@@ -2,6 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const OpenAI = require('openai');
 const cors = require('cors');
+const model = require("./models");
+
+const RequestResponses = model.RequestResponses;
 
 const app = express()
 const port = process.env.PORT || 3000;
@@ -9,17 +12,12 @@ const port = process.env.PORT || 3000;
 const openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 app.use(express.json())
 
-app.use(cors({origin: ['http://localhost:5173', 'https://tone-translator-frontend-g5pa.vercel.app'], credentials: true}))
+app.use(cors({origin: ['http://localhost:5174', 'https://tone-translator-frontend-g5pa.vercel.app'], credentials: true}))
 app.post('/translate-tone', async (req, res) => {
     const { sample_content, new_draft } = req.body;
     if (!sample_content || !new_draft) {
       return res.status(400).json({ error: 'Both sample content and new draft are required' });
     }
-  
-    // Construct the prompt
-    // const prompt = `Hey GPT imagine you are an expert Tone and Sentiment Translator, you have been provided with two texts one is Sample Content : "${sample_content}" and another is new_draft: "${new_draft}". What you have to do is Analyze the tone, writing style and sentiment of sample content and translate the new draft tone to analyzed tone, sentiment and writing style of sample content and in output give me only translated new draft nothing else`;
-  
-    
 
   try {
     const chatCompletion = await openaiClient.chat.completions.create({
@@ -56,14 +54,18 @@ app.post('/translate-tone', async (req, res) => {
     });
 
     const completion = chatCompletion.choices[0].message.content;
-    // First parse - converts jsonString into a JavaScript object
     const parsedObject = JSON.parse(completion)
-    // const innerObject = JSON.parse(parsedObject.completion);
-
-    console.log("completion", parsedObject)
-
-    // Send the completion text back to the client
+     
     res.json({ completion });
+    // Storing in the db
+    const savedRecord = await RequestResponses.create({
+      sampleContent: sample_content,
+      newDraft: new_draft,
+      translatedDraft: parsedObject.translated_text,
+      sampleTone: parsedObject.sample_tone,  // Assuming sample_tone is an array
+      sampleSentiment: parsedObject.sample_sentiment
+  });
+   
 } catch (error) {
     console.error(error);
 

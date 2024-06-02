@@ -1,0 +1,38 @@
+{
+  "development": {
+    "username": "default",
+    "password": "NhH9jOEGw4nC",
+    "database": "verceldb",
+    "host": "ep-spring-mountain-a4l8v5m9-pooler.us-east-1.aws.neon.tech",
+    "url":"postgres://default:NhH9jOEGw4nC@ep-spring-mountain-a4l8v5m9-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require",
+    "dialect": "postgres",
+    "port":"5432",
+    "dialectOptions": {
+      "ssl": {
+          "require":"true",
+          "rejectUnauthorized":"false"
+      }
+  }
+  },
+  "test": {
+      "dialect": "postgres",
+      "port":"5432",
+      "dialectOptions": {
+          "ssl": {
+              "require":"true",
+              "rejectUnauthorized":"false"
+          }
+      }
+  },
+  "production": {
+      "dialect": "postgres",
+      "port":"5432",
+      "dialectOptions": {
+                "ssl": {
+                    "require":"true",
+                    "rejectUnauthorized":"false"
+                }
+            }
+  }
+}
+
