@@ -145,19 +145,14 @@ In this representation, the line between [Request] and [Response] shows the rela
 
 ## Program Design
 
-The program design of the backend of my application, uses Express.js along with controllers, routes, services, migrations, and models through Sequelize ORM, follows a typical MVC (Model-View-Controller) architectural pattern. Here's a brief description of each component and their roles in my backend design:
+The program design of the backend of my application, uses Express.js along with migrations, and models through Sequelize ORM. Here's a brief description of each component and their roles in my backend design:
 
 1. **Express.js**: Express is a fast and minimalist web framework for Node.js that simplifies the creation of robust and scalable web applications. That was the reason I used express for api development.
 
-2. **Controllers**: Controllers are responsible for handling incoming HTTP requests, processing data, and sending HTTP responses. They act as intermediaries between the routes (endpoints) and the services. Each controller corresponds to a specific resource or entity in my application, such as processes or steps.
 
-3. **Routes**: Routes define the available endpoints (URL paths) in my application and map them to specific controller methods. They determine how incoming requests should be handled based on the HTTP method (GET, POST, PUT, DELETE) and the URL.
+2. **Migrations**: Migrations are scripts that define the structure and schema of the database tables. They are used to create, modify, or update database tables and their relationships. Sequelize migrations help keep my database schema in sync with my application's models.
 
-4. **Services**: Services encapsulate the business logic of my application. They perform operations such as data validation, database interactions, and any other complex tasks required to fulfill a request. Services are typically called by controllers and can interact with models.
-
-5. **Migrations**: Migrations are scripts that define the structure and schema of the database tables. They are used to create, modify, or update database tables and their relationships. Sequelize migrations help keep my database schema in sync with my application's models.
-
-6. **Models**: Models define the data structure and relationships of the application's entities. They serve as an abstraction layer for interacting with the database. Sequelize models provide an object-oriented approach to database operations, allowing to create, read, update, and delete records easily.
+3. **Models**: Models define the data structure and relationships of the application's entities. They serve as an abstraction layer for interacting with the database. Sequelize models provide an object-oriented approach to database operations, allowing to create, read, update, and delete records easily.
 
 The typical flow of a request in my backend application follows these steps:
 
