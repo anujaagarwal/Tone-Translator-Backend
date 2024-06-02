@@ -19,17 +19,23 @@ app.post('/translate-tone', async (req, res) => {
       return res.status(400).json({ error: 'Both sample content and new draft are required' });
     }
 
+    const prompt = `You are expert english linguistic teacher that has profound knowledge of analyzing written english text tone and sentiment and translate the tone of a given second text to the one analyzed.
+    You will be provided with two texts consecutively first one will be the text whose tone and sentiment needs to be analyzed, second text is the text which should be translated to the tone of first one
+     Respond with tone, sentiment of first text and translated second text. 
+     Provide your answer in JSON structure like this 
+     {
+      "sample_tone": "<The tone of first text>",
+       "sample_sentiment": "<The sentiment of first text>", 
+       "translated_text": "<The translated second text>"
+      }`
+
   try {
     const chatCompletion = await openaiClient.chat.completions.create({
       messages: [
         {
           role: "assistant",
-          content:
-            `You are expert english linguistic teacher that has profound knowledge of analyzing written english text tone and sentiment and translate the tone of a given second text to the one analyzed.
-            You will be provided with two texts consecutively first one will be the text whose tone and sentiment needs to be analyzed, second text is the text which should be translated to the tone of first one
-             Respond with tone, sentiment of first text and translated second text. 
-             Provide your answer in JSON structure like this 
-             {"sample_tone": "<The tone of first text>", "sample_sentiment": "<The sentiment of first text>", "translated_text": "<The translated second text>"`
+          content: prompt
+            
         },
         {
           role: "user",
@@ -47,7 +53,6 @@ app.post('/translate-tone', async (req, res) => {
           content: `'${sample_content}, ${new_draft}`,
         },
       ],
-        // messages: [{ role: 'user', content: prompt }],
         temperature:1,
         model: 'gpt-4-turbo',
         response_format: { type: "json_object" },
