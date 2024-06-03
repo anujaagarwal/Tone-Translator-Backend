@@ -16,7 +16,7 @@ Certainly! Here's a basic outline for a "Getting Started" documentation for the 
 
 ## Getting Started
 
-Welcome to the backend server of my AI Tone Translator application. Two texts will be the input, this system will analyze the tone, sentiment of first text and convert the tone of second text to the analyzed tone. This guide will help you get up and running with the server so that you can start building amazing features.
+Welcome to the backend server of my AI Tone Translator application. Two texts will be the input, this system will analyze the tone, sentiment of reference text and convert the tone of Adjustable text to the analyzed tone. This guide will help you get up and running with the server so that you can start building amazing features.
 
 ### Prerequisites
 
