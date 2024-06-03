@@ -9,10 +9,11 @@ const translateTone = async (req, res) => {
     try {
         const parsedObject = await translateService.translateTone(sample_content, new_draft);
         
-        
+        if (!parsedObject.translated_text) {
+            throw new Error('Translation failed or returned null.');
+        }
 
-        res.json({ completion: parsedObject });
-        // Storing in the database
+        // Storing the record in the db
         const savedRecord = await translateService.saveTranslationResult({
             sampleContent: sample_content,
             newDraft: new_draft,
@@ -20,9 +21,16 @@ const translateTone = async (req, res) => {
             sampleTone: parsedObject.sample_tone,
             sampleSentiment: parsedObject.sample_sentiment
         });
+
+        res.json({ completion: parsedObject });
+        
+        
     } catch (error) {
         console.error(error);
-        res.status(500).send('Internal Server Error');
+        if (!res.headersSent) {
+            res.status(500).send('Internal Server Error');
+        }
+        
     }
 };
 
