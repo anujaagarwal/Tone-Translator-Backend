@@ -7,8 +7,8 @@ const openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 // Function to handle the business logic of translating tone
 const translateTone = async (sample_content, new_draft) => {
     const prompt = `As an expert English linguistic teacher with deep knowledge of text analysis, your task involves two main steps:
-    Analyze the sample_content: You will assess the tone and sentiment of the first text, known as the sample_content.
-    Translate the Tone of the new_draft: The second text, new_draft, must be adjusted to reflect the tone identified in the sample_content.
+    Analyze the sample_content: You will assess the tone and sentiment of the sample_content.
+    Translate the Tone of the new_draft: The new_draft, must be adjusted to reflect the tone identified in the sample_content.
     Your response should include:
     The tone of the sample_content.
     The sentiment of the sample_content.
