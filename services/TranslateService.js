@@ -6,10 +6,14 @@ const openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Function to handle the business logic of translating tone
 const translateTone = async (sample_content, new_draft) => {
-    const prompt = `You are expert English linguistic teacher that has profound knowledge of analyzing written English text tone and sentiment and translate the tone of a given second text to the one analyzed.
-    You will be provided with two texts consecutively first one will be the text whose tone and sentiment needs to be analyzed, second text is the text which should be translated to the tone of first one
-     Respond with tone, sentiment of first text and translated second text. 
-     Provide your answer in JSON structure like this 
+    const prompt = `As an expert English linguistic teacher with deep knowledge of text analysis, your task involves two main steps:
+    Analyze the sample_content: You will assess the tone and sentiment of the first text, known as the sample_content.
+    Translate the Tone of the new_draft: The second text, new_draft, must be adjusted to reflect the tone identified in the sample_content.
+    Your response should include:
+    The tone of the sample_content.
+    The sentiment of the sample_content.
+    The new_draft text adjusted to match the tone of the sample_content.
+     Please provide your answer in JSON structure like this 
      {
       "sample_tone": "<The tone of first text>",
        "sample_sentiment": "<The sentiment of first text>", 
@@ -26,7 +30,7 @@ const translateTone = async (sample_content, new_draft) => {
             {
               role: "user",
               content:
-                "The company has witnessed a significant uptick in revenues this quarter, with a 12% increase compared to the previous quarter. The growth can be attributed to the successful implementation of new marketing strategies that resonated well with our target demographic. It is imperative that we continue to monitor these trends closely to ensure sustained growth and address any unforeseen market fluctuations promptly., Hey everyone, just wanted to let you know that our earnings are looking better than ever! We're up by 12% because those new marketing plans are hitting just right. Let’s keep an eye on this to keep the ball rolling and handle any bumps that come up.",
+                "sample_content: The company has witnessed a significant uptick in revenues this quarter, with a 12% increase compared to the previous quarter. The growth can be attributed to the successful implementation of new marketing strategies that resonated well with our target demographic. It is imperative that we continue to monitor these trends closely to ensure sustained growth and address any unforeseen market fluctuations promptly., new_draft: Hey everyone, just wanted to let you know that our earnings are looking better than ever! We're up by 12% because those new marketing plans are hitting just right. Let’s keep an eye on this to keep the ball rolling and handle any bumps that come up.",
     
             },
             {
@@ -36,7 +40,7 @@ const translateTone = async (sample_content, new_draft) => {
             },
             {
               role: "user",
-              content: `${sample_content}, ${new_draft}`,
+              content: `sample_content: ${sample_content}, new_draft: ${new_draft}`,
             },
           ],
         temperature: 1,
