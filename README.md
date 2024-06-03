@@ -10,21 +10,20 @@
 - [Technologies Used](#technologies-used)
 - [API Contract](#api-contract)
 - [Testing](#testing)
-- [Known Issues](#known-issues)
 - [Deployment](#deployment)
 
 Certainly! Here's a basic outline for a "Getting Started" documentation for the backend server.
 
 ## Getting Started
 
-Welcome to the backend server of my AI Tone Translator application. This guide will help you get up and running with the server so that you can start building amazing features.
+Welcome to the backend server of my AI Tone Translator application. Two texts will be the input, this system will analyze the tone, sentiment of first text and convert the tone of second text to the analyzed tone. This guide will help you get up and running with the server so that you can start building amazing features.
 
 ### Prerequisites
 
 Before you begin, ensure you have met the following requirements:
 
 - [Node.js](https://nodejs.org/) installed on your development machine.
-- A PostgreSQL database (e.g., [Supabase](https://supabase.io/)) set up and accessible.
+- A PostgreSQL database (e.g., [Vercel](https://vercel.com/)) set up and accessible.
 - An [OpenAI API Key](https://beta.openai.com/account/api-keys) for AI-powered content generation.
 
 ### Installation
@@ -60,7 +59,7 @@ Before you begin, ensure you have met the following requirements:
 
    Replace `your_database_username`, `your_database_password`, `your_database_host`, `your_database_name`, and `your_openai_api_key` with your actual database and OpenAI API details.
 
-2. Ensure that your connection with postresql is running and accessible by running /healthcheck api. Described below in API contracts
+2. Ensure that your connection with postresql is running.
 
 ### Database Migration
 
@@ -84,11 +83,11 @@ The server should now be running on the specified port (usually 3000).
 
 ### API Endpoints
 
-My backend server provides API endpoints for frontend application. Refer to the API documentation for details on available endpoints and their functionality.
+My backend server provides API endpoint for frontend application. Refer to the API documentation for details on available endpoint and it's functionality.
 
 ### Testing
 
-You can run tests or test using postman
+You can test using postman
 
 ### Conclusion
 
@@ -96,63 +95,56 @@ Congratulations! You've successfully set up backend server. You can now integrat
 
 ## Domain Modelling
 
-1. Request Entity: This entity would represent a request in the system. Attributes which includes id, sample_content, new_draft.
-
-2. Response Entity: This entity would represent the translated_text. Attributes includes id, request_id, translated_text.
-
-- Relationship between Request and Response is 1:1.
+- RequestResponse Entity: This entity would represent a requestresponse table in the system. Attributes which includes id, sampleContent, newDraft, translatedText, sampleTone, sampleSentiment.
 
 Have a look at the diagram below:-
 
 ```bash
-[Request] 1 ---- 1 [Response]
-|                |
-|                |
-| - ProcessID    | - StepID
-| - ProcessName  | - StepName
-| - Description  | - StepDescription
-|                | - StepOrder
-                 | - ProcessID(FK)
+[RequestResponse] 
+|                 
+| - id             
+| - sampleContent   
+| - newDraft 
+| - translatedText
+| - sampleTone
+| - sampleSentiment
 
 ```
+Reason for storing the data is, in future we can analyze the accuracy level of our system.
+In this representation, the bullet points under RequestResponse entity represent attributes of that entity.
 
-In this representation, the line between [Request] and [Response] shows the relationship, with '1' on the Request side and '1' on the Response side, indicating that one Process can have one Response. The bullet points under each entity represent attributes of that entity.
-
-- Constraints is that request_Id should be unique always.
+- Constraints is that id should be unique always.
 
 ## Schema Design
 
-1. Processes Table:-
+-  RequestResponse Table:-
    This table stores the high-level information about each process.
 
-   - id: Primary Key, unique identifier for each process.
-   - name: Text, name of the process.
-   - description: Text, a brief description of the process.
-   - created_at: DateTime, timestamp when the process was created.
-   - updated_at: DateTime, timestamp when the process was last updated.
+   - id: Primary Key, unique identifier for each input.
+   - sampleContent: Text, content of which tone needs to be ananlyzed.
+   - newDraft: Text, content whose tone needs to be changed.
+   - translatedText : Text
+   - sampleTone: Text, tone of sampleContent
+   - sampleSentiment: Text, sentiment of sampleContent
+   - createdAt: DateTime, timestamp when the process was created.
+   - updatedAt: DateTime, timestamp when the process was last updated.
 
-2. Steps Table
-   This table stores individual steps for each process.
-
-- id: Primary Key, unique identifier for each step.
-- process_id: Foreign Key, links to the Processes table.
-- title: Text, title of the step.
-- description: Text, detailed description of the step.
-- order: Integer, the order of the step within the process.
-- metadata: Text, for storing any additional information related to the step.
-- created_at: DateTime, timestamp when the step was created.
-- updated_at: DateTime, timestamp when the step was last updated.
 
 ## Program Design
 
-The program design of the backend of my application, uses Express.js along with migrations, and models through Sequelize ORM. Here's a brief description of each component and their roles in my backend design:
+The program design of the backend of my application, uses Express.js along with controllers, routes, migrations, and models through Sequelize ORM, follows a typical MVC (Model-View-Controller) architectural pattern. Here's a brief description of each component and their roles in my backend design:
 
 1. **Express.js**: Express is a fast and minimalist web framework for Node.js that simplifies the creation of robust and scalable web applications. That was the reason I used express for api development.
 
+2. **Controllers**: Controllers are responsible for handling incoming HTTP requests, processing data, and sending HTTP responses. They act as intermediaries between the routes (endpoints) and the services. 
 
-2. **Migrations**: Migrations are scripts that define the structure and schema of the database tables. They are used to create, modify, or update database tables and their relationships. Sequelize migrations help keep my database schema in sync with my application's models.
+3. **Routes**: Routes define the available endpoints (URL paths) in my application and map them to specific controller methods. They determine how incoming requests should be handled based on the HTTP method (GET, POST, PUT, DELETE) and the URL.
 
-3. **Models**: Models define the data structure and relationships of the application's entities. They serve as an abstraction layer for interacting with the database. Sequelize models provide an object-oriented approach to database operations, allowing to create, read, update, and delete records easily.
+4. **Services**: Services encapsulate the business logic of my application. They perform operations such as data validation, database interactions, and any other complex tasks required to fulfill a request. Services are typically called by controllers and can interact with models.
+
+5. **Migrations**: Migrations are scripts that define the structure and schema of the database tables. They are used to create, modify, or update database tables and their relationships. Sequelize migrations help keep my database schema in sync with my application's models.
+
+6. **Models**: Models define the data structure and relationships of the application's entities. They serve as an abstraction layer for interacting with the database. Sequelize models provide an object-oriented approach to database operations, allowing to create, read, update, and delete records easily.
 
 The typical flow of a request in my backend application follows these steps:
 
@@ -160,7 +152,7 @@ The typical flow of a request in my backend application follows these steps:
 
 2. The route maps the request to the appropriate controller method.
 
-3. The controller method, in turn, call one or more services to perform business logic and data processing.
+3. The controller method, in turn, call one service to perform business logic and data processing.
 
 4. Services interact with Sequelize models to read from or write to the database.
 
@@ -176,33 +168,33 @@ Overall, this design separates concerns, making my backend code organized, maint
 ├── package.json
 ├── package-lock.json
 ├── README.md
-├── app.js
+├── server.js
+|-- vercel.json
+|-- .gitignore
+|-- config
+|   |- config.json
 ├── controllers
-│   ├── processController.js
-│   └── stepController.js
+│   ├── TranslateController.js
 ├── models
-    ├── process.js
-│   └── step.js
+|   ├── index.js
+|   |-- requestresponse.js
 ├── migrations
-    ├── create-process.js
-│   └── create-step.js
+|   ├── create-request-response.js
 ├── routes
-│   ├── processRoutes.js
-│   └── stepsRoutes.js
+│   ├── TranslateRoutes.js
 ├── seeders
 └── services
-    ├── openaiService.js
-    ├── processService.js
-    └── stepsService.js
+    ├── TranslateService.js
 ```
 
 ## Technologies Used
 
-1. **[Supabase](https://supabase.com/):**
+1. **[Vercel](https://vercel.com/):**
 
 - Used for the database.
-- Provides a PostgreSQL database with a user-friendly interface.
+- Provides a PostgreSQL database.
 - Simplifies database management and reduces the need for complex server-side code.
+- Deployed through it.
 
 2. **[NodeJs](https://nodejs.org/en):**
 
@@ -223,7 +215,7 @@ Overall, this design separates concerns, making my backend code organized, maint
 
 5. **[OpenAI API](https://platform.openai.com/docs/overview):**
 
-- Integrated to generate step-by-step instructions from text descriptions.
+- Integrated to generate tone of text and translate a text to the analyzed tone.
 - Utilized for AI-powered content generation.
 
 6. **[Postman](https://www.postman.com/):** Used for testing the apis in local
@@ -232,18 +224,18 @@ Overall, this design separates concerns, making my backend code organized, maint
 
 Here is an high level definition of APIs I have used.
 
-### Process Creation
+### AI Powered API
 
-**Endpoint:** `/api/create-process`
+**Endpoint:** `/translate-tone`
 **Method:** POST
-**Description:** Create a new process.
+**Description:** Analyze the text and translate the text and at the end create a record.
 
 **Request:**
 
 ```json
 {
-  "name": "Name of Process",
-  "description": "Description of the process"
+    "sample_content": "Hey I just need a weekend to travel to some place near north and spend my night by star gazing",
+    "new_draft": "Dear Team, I am pleased to share that our quarterly projections are signaling a robust growth trajectory in our core markets, foreseeing a 14% increase in revenue compared to the previous fiscal year. It is crucial that we develop strategic plans to optimize our resources and fully leverage this promising trend. Best Regards"
 }
 ```
 
@@ -251,165 +243,24 @@ Here is an high level definition of APIs I have used.
 
 ```json
 {
-  "createdAt": "2023-12-11T04:16:59.616Z",
-  "updatedAt": "2023-12-11T04:16:59.616Z",
-  "id": "id of the process",
-  "name": "Nameof the process",
-  "description": "Description of process"
-}
-```
-
-**Response (Error):**
-
-```json
-{
-  "error": "Error message"
-}
-```
-
-### AI Powered Api which interacts with LLM
-
-**Endpoint:** `/api/process-description`
-**Method:** POST
-**Description:** Create a new process in the db and generates steps by interacting with AI and stores those step in the database.
-
-**Request:**
-
-```json
-{
-  "description": "Description of process"
-}
-```
-
-**Response (Success):**
-
-```json
-{
-  "processId": 1,
-  "steps": [
-    {
-      "order": 1,
-      "title": "Title of step",
-      "description": "Description of step",
-      "processId": 1
-    },
-    {
-      "order": 2,
-      "title": "Title of step",
-      "description": "Description of step",
-      "processId": 1
+    "completion": {
+        "sample_tone": "Informal, Personal",
+        "sample_sentiment": "Positive",
+        "translated_text": "Hey everyone, just wanted to let you know that our future's looking pretty bright! We're predicting about a 14% jump in revenue. We should definitely start thinking about how we can make the most of this. Cheers!"
     }
-  ]
 }
 ```
 
-**Response (Error):**
 
-```json
-{
-  "error": "Error message"
-}
-```
-
-### Step Update
-
-**Endpoint:** `/api/update-step/:processId/:order`
-**Method:** PUT
-**Description:** Update an existing step.
-
-**Request:**
-
-```json
-{
-  "title": "Updated Title",
-  "description": "Updated Description"
-}
-```
-
-**Response (Success):**
-
-```json
-{
-  "id": 1,
-  "processId": 1,
-  "title": "Updated Title",
-  "description": "Updated Description",
-  "order": 1
-}
-```
-
-**Response (Error):**
-
-```json
-{
-  "error": "Error message"
-}
-```
-
-### Bulk Upload of all the steps linked to a processId
-
-**Endpoint:** `/api/save-all-steps`
-**Method:** GET
-**Description:** Retrieve process details by ID.
-**Request:**
-
-```json
-{
-  "steps": [
-    {
-      "processId": 1,
-      "order": 1,
-      "title": "hey 1",
-      "description": "hey 1"
-    },
-    {
-      "processId": 1,
-      "order": 2,
-      "title": "hey 2",
-      "description": "hey 2"
-    }
-  ]
-}
-```
-
-**Response (Success):**
-
-```json
-{
-  "message": "Steps saved successfully"
-}
-```
-
-**Response (Error):**
-
-```json
-{
-  "error": "Error message"
-}
-```
-
-### Health Check
-
-**Endpoint:** `/healthcheck`
-**Method:** GET
-**Description:** Check the health status of the server.
-
-**Response (Success):** `"I'm healthy!"`
-
-**Response (Error):** `"Unable to connect to server"`
 
 ## Testing
 
-Start the node server and one by one use the above endpoints and the localhost url to test the apis in postman.
-
-## Known Issues
-
-- Now the openAI api is giving response slow, so have to optimise it.
+Start the node server and use the above endpoint and the localhost url to test the api in postman.
 
 ## Deployment
 
-Used Render to deloy my server, here is the link
+Used Vercel to deloy my server, here is the link
 
 ```bash
-  https://ai-process-builder.onrender.com
+  https://tone-translator-backend.vercel.app/
 ```
