@@ -7,17 +7,18 @@ const openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 // Function to handle the business logic of translating tone
 const translateTone = async (sample_content, new_draft) => {
     const prompt = `As an expert English linguistic teacher with deep knowledge of text analysis, your task involves two main steps:
+    You will be given two texts one is sample_content and another is new_draft.
     Analyze the sample_content: You will assess the tone and sentiment of the sample_content.
-    Translate the Tone of the new_draft: The new_draft, must be adjusted to reflect the tone identified in the sample_content.
+    Translate the Tone of the new_draft: The new_draft, must be translated to the tone identified in the sample_content. 
     Your response should include:
     The tone of the sample_content.
     The sentiment of the sample_content.
-    The new_draft text adjusted to match the tone of the sample_content.
+    The new_draft should be translated to match the tone of the sample_content.
      Please provide your answer in JSON structure like this 
      {
-      "sample_tone": "<The tone of first text>",
-       "sample_sentiment": "<The sentiment of first text>", 
-       "translated_text": "<The translated second text>"
+      "sample_tone": "<The tone of sample_content>",
+       "sample_sentiment": "<The sentiment of sample_content>", 
+       "translated_text": "<The translated new_draft>"
       }`;
 
     const chatCompletion = await openaiClient.chat.completions.create({
