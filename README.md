@@ -1,4 +1,4 @@
-# Backend of AI Powered Tone Translator
+# Backend of AI Powered Tone Analyzer and Translator
 
 ## Table of Contents
 
